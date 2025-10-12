@@ -1,5 +1,6 @@
 using Microsoft.Azure.Functions.Worker;
-using ServiceBus.EmulatorSample.Services;
+using Shared.EmulatorSample.Models;
+using Shared.EmulatorSample.Services;
 
 namespace ServiceBus.EmulatorSample;
 

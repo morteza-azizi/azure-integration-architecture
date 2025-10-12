@@ -7,8 +7,8 @@
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
     <IsTestProject>true</IsTestProject>
-    <AssemblyName>ServiceBus.EmulatorSample.Tests</AssemblyName>
-    <RootNamespace>ServiceBus.EmulatorSample.Tests</RootNamespace>
+    <AssemblyName>StorageQueue.EmulatorSample.Tests</AssemblyName>
+    <RootNamespace>StorageQueue.EmulatorSample.Tests</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -18,14 +18,15 @@
     <PackageReference Include="xunit.runner.visualstudio" Version="2.4.5" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" />
     <PackageReference Include="Testcontainers" Version="4.1.0" />
-    <PackageReference Include="Testcontainers.ServiceBus" Version="4.1.0" />
-    <PackageReference Include="Azure.Messaging.ServiceBus" Version="7.17.3" />
+    <PackageReference Include="Testcontainers.Azurite" Version="4.1.0" />
+    <PackageReference Include="Azure.Storage.Queues" Version="12.19.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="8.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ServiceBus.EmulatorSample\ServiceBus.EmulatorSample.csproj" />
+    <ProjectReference Include="..\StorageQueue.EmulatorSample\StorageQueue.EmulatorSample.csproj" />
     <ProjectReference Include="..\..\Shared.EmulatorSample\Shared.EmulatorSample\Shared.EmulatorSample.csproj" />
   </ItemGroup>
 
@@ -34,10 +35,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <CopyToPublishDirectory>Never</CopyToPublishDirectory>
     </None>
-    <None Update="Config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <CopyToPublishDirectory>Never</CopyToPublishDirectory>
-    </None>
   </ItemGroup>
 
-</Project> 
+</Project>

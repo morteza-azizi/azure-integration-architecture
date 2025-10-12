@@ -2,6 +2,7 @@ using Azure.Messaging.ServiceBus;
 using Azure.Identity;
 using Microsoft.Extensions.Logging;
 using System.Text.Json;
+using Shared.EmulatorSample.Models;
 
 namespace ServiceBus.EmulatorSample;
 

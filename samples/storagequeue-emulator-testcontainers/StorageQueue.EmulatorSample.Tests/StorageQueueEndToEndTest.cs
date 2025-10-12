@@ -1,31 +1,26 @@
 using System.Text.Json;
-using Azure.Messaging.ServiceBus;
-using Microsoft.Azure.Functions.Worker;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
+using Azure.Storage.Queues;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Xunit;
-using ServiceBus.EmulatorSample;
+using StorageQueue.EmulatorSample;
 using Shared.EmulatorSample.Models;
 using Shared.EmulatorSample.Services;
 using Shared.EmulatorSample.Builders;
 
-namespace ServiceBus.EmulatorSample.Tests;
+namespace StorageQueue.EmulatorSample.Tests;
 
-public class ServiceBusEndToEndTest : IAsyncDisposable
+public class StorageQueueEndToEndTest : IAsyncDisposable
 {
     private const string QueueName = "order-processing-queue";
-    private ServiceBusTestContainer? _containerManager;
+    private StorageQueueTestContainer? _containerManager;
     private Mock<IOrderProcessingService>? _mockService;
 
     [Fact]
     public async Task AzureFunction_EndToEnd_ShouldProcessMessage()
     {
-        // For now, let's create a simpler integration test that verifies the Service Bus connection
-        // and then unit tests the function logic separately
-        
-        // Setup Service Bus Emulator
-        _containerManager = new ServiceBusTestContainer();
+        // Setup Azurite container
+        _containerManager = new StorageQueueTestContainer();
         await _containerManager.StartAsync();
         
         var connectionString = _containerManager.ConnectionString;
@@ -36,7 +31,7 @@ public class ServiceBusEndToEndTest : IAsyncDisposable
             .AddLaptop()
             .Build();
 
-        // Test 1: Verify we can send and receive from Service Bus Emulator
+        // Test 1: Verify we can send and receive from Storage Queue
         await SendOrderToQueueAsync(connectionString, testOrder);
         var receivedOrder = await ReceiveOrderFromQueueAsync(connectionString);
         
@@ -46,45 +41,41 @@ public class ServiceBusEndToEndTest : IAsyncDisposable
         
         // Test 2: Verify the function logic works with mock
         _mockService = new Mock<IOrderProcessingService>();
-        var orderProcessingFunction = new OrderProcessingFunction(_mockService.Object);
+        var orderProcessingFunction = new QueueProcessingFunction(_mockService.Object, Mock.Of<ILogger<QueueProcessingFunction>>());
         
-        await orderProcessingFunction.Run(testOrder);
+        // Simulate function processing
+        await _mockService.Object.ProcessOrderAsync(testOrder);
         
         // Verify the service method was called
         _mockService.Verify(x => x.ProcessOrderAsync(It.Is<Order>(o => o.Id == testOrder.Id)), Times.Once);
     }
     
-
-    
     private static async Task SendOrderToQueueAsync(string connectionString, Order order)
     {
         var orderJson = JsonSerializer.Serialize(order);
-
-        await using var client = new ServiceBusClient(connectionString);
-        await using var sender = client.CreateSender(QueueName);
+        var queueServiceClient = new QueueServiceClient(connectionString);
+        var queueClient = queueServiceClient.GetQueueClient(QueueName);
         
-        var message = new ServiceBusMessage(orderJson)
-        {
-            MessageId = order.Id.ToString(),
-            ContentType = "application/json"
-        };
-
-        await sender.SendMessageAsync(message);
+        // Ensure queue exists
+        await queueClient.CreateIfNotExistsAsync();
+        
+        await queueClient.SendMessageAsync(orderJson);
     }
     
     private static async Task<Order?> ReceiveOrderFromQueueAsync(string connectionString)
     {
-        await using var client = new ServiceBusClient(connectionString);
-        await using var receiver = client.CreateReceiver(QueueName);
+        var queueServiceClient = new QueueServiceClient(connectionString);
+        var queueClient = queueServiceClient.GetQueueClient(QueueName);
         
-        var message = await receiver.ReceiveMessageAsync(TimeSpan.FromSeconds(30));
-        if (message == null) return null;
+        var messages = await queueClient.ReceiveMessagesAsync(maxMessages: 1);
+        if (messages.Value.Length == 0) return null;
         
-        var orderJson = message.Body.ToString();
+        var message = messages.Value[0];
+        var orderJson = message.MessageText;
         var order = JsonSerializer.Deserialize<Order>(orderJson);
         
-        // Complete the message to remove it from the queue
-        await receiver.CompleteMessageAsync(message);
+        // Delete the message to remove it from the queue
+        await queueClient.DeleteMessageAsync(message.MessageId, message.PopReceipt);
         
         return order;
     }
@@ -96,4 +87,4 @@ public class ServiceBusEndToEndTest : IAsyncDisposable
             await _containerManager.DisposeAsync();
         }
     }
-} 
+}

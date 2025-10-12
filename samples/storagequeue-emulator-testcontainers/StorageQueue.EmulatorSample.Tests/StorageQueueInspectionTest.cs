@@ -1,37 +1,48 @@
 using System.Text.Json;
-using Azure.Messaging.ServiceBus;
+using Azure.Storage.Queues;
 using Xunit;
-using ServiceBus.EmulatorSample;
+using StorageQueue.EmulatorSample;
 using Shared.EmulatorSample.Models;
 using Shared.EmulatorSample.Builders;
 
+namespace StorageQueue.EmulatorSample.Tests;
 
-namespace ServiceBus.EmulatorSample.Tests;
-
-public class ServiceBusEmulatorInspectionTest : IAsyncDisposable
+public class StorageQueueInspectionTest : IAsyncDisposable
 {
     private const string QueueName = "order-processing-queue";
-    private ServiceBusTestContainer? _containerManager;
+    private StorageQueueTestContainer? _containerManager;
 
     [Fact]
     public async Task SendAndVerifyMessages_ShouldContainExpectedMessages()
     {
-        // Start the Service Bus Emulator
-        _containerManager = new ServiceBusTestContainer();
+        Console.WriteLine("[TEST] Starting Azurite container...");
+        
+        // Start the Azurite container
+        _containerManager = new StorageQueueTestContainer();
         await _containerManager.StartAsync();
         
         var connectionString = _containerManager.ConnectionString;
+        Console.WriteLine($"[TEST] Azurite started. Connection: {connectionString}");
         
         // Send test messages
+        Console.WriteLine("[TEST] Sending 3 test messages...");
         var sentOrders = await SendTestMessages(connectionString);
+        Console.WriteLine($"[TEST] Sent {sentOrders.Count} messages to queue '{QueueName}'");
         
         // Verify all messages are in the queue
+        Console.WriteLine("[TEST] Verifying messages in queue...");
         await VerifyMessagesInQueue(connectionString, sentOrders);
+        Console.WriteLine("[TEST] All messages verified successfully!");
     }
     
     private static async Task<List<Order>> SendTestMessages(string connectionString)
     {
         var sentOrders = new List<Order>();
+        var queueServiceClient = new QueueServiceClient(connectionString);
+        var queueClient = queueServiceClient.GetQueueClient(QueueName);
+        
+        // Ensure queue exists
+        await queueClient.CreateIfNotExistsAsync();
         
         for (int i = 1; i <= 3; i++)
         {
@@ -41,19 +52,11 @@ public class ServiceBusEmulatorInspectionTest : IAsyncDisposable
                 .Build();
                 
             sentOrders.Add(testOrder);
-                
-            await using var client = new ServiceBusClient(connectionString);
-            await using var sender = client.CreateSender(QueueName);
             
             var orderJson = JsonSerializer.Serialize(testOrder, new JsonSerializerOptions { WriteIndented = true });
-            var message = new ServiceBusMessage(orderJson)
-            {
-                MessageId = testOrder.Id.ToString(),
-                ContentType = "application/json",
-                Subject = $"Order from {testOrder.CustomerName}"
-            };
-
-            await sender.SendMessageAsync(message);
+            await queueClient.SendMessageAsync(orderJson);
+            
+            Console.WriteLine($"[TEST]   Sent message {i}: Order {testOrder.Id} for {testOrder.CustomerName}");
         }
         
         return sentOrders;
@@ -61,36 +64,37 @@ public class ServiceBusEmulatorInspectionTest : IAsyncDisposable
     
     private static async Task VerifyMessagesInQueue(string connectionString, List<Order> expectedOrders)
     {
-        await using var client = new ServiceBusClient(connectionString);
-        await using var receiver = client.CreateReceiver(QueueName, new ServiceBusReceiverOptions
-        {
-            ReceiveMode = ServiceBusReceiveMode.PeekLock // Don't actually consume the messages
-        });
+        var queueServiceClient = new QueueServiceClient(connectionString);
+        var queueClient = queueServiceClient.GetQueueClient(QueueName);
         
         // Peek messages (doesn't remove them from queue)
-        var messages = await receiver.PeekMessagesAsync(maxMessages: 10);
+        var peekedMessages = await queueClient.PeekMessagesAsync(maxMessages: 10);
+        
+        Console.WriteLine($"[TEST]   Peeked {peekedMessages.Value.Length} messages from queue");
         
         // Assert we have the expected number of messages
-        Assert.Equal(expectedOrders.Count, messages.Count);
+        Assert.Equal(expectedOrders.Count, peekedMessages.Value.Length);
         
         // Verify each message content
-        for (int i = 0; i < messages.Count; i++)
+        for (int i = 0; i < peekedMessages.Value.Length; i++)
         {
-            var message = messages[i];
-            var messageBody = message.Body.ToString();
+            var message = peekedMessages.Value[i];
+            var messageBody = message.MessageText;
             var receivedOrder = JsonSerializer.Deserialize<Order>(messageBody);
             
             // Assert message properties
-            Assert.Equal("application/json", message.ContentType);
             Assert.NotNull(message.MessageId);
-            Assert.NotNull(message.Subject);
-            Assert.Contains("Order from", message.Subject);
+            Assert.NotNull(message.InsertedOn);
+            Assert.True(message.ExpiresOn > message.InsertedOn);
+            Assert.Equal(0, message.DequeueCount); // Never been dequeued
             
             // Assert order content
             Assert.NotNull(receivedOrder);
             Assert.True(expectedOrders.Any(o => o.Id == receivedOrder.Id), 
                 $"Order with ID {receivedOrder.Id} was not in the expected orders");
             Assert.Contains(receivedOrder.CustomerName, expectedOrders.Select(o => o.CustomerName));
+            
+            Console.WriteLine($"[TEST]   Verified message {i + 1}: {receivedOrder.CustomerName} - Order {receivedOrder.Id}");
         }
     }
 
@@ -101,4 +105,4 @@ public class ServiceBusEmulatorInspectionTest : IAsyncDisposable
             await _containerManager.DisposeAsync();
         }
     }
-} 
+}

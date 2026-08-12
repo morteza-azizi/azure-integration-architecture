@@ -5,13 +5,11 @@ Engineering home for my Azure Integration Architecture work and article series â
 ## Topics
 
 - Azure Integration Services
-- Azure Service Bus
-- Messaging
-- Event-driven architecture
-- APIs and integration
-- Resilience
+- Messaging & event-driven architecture
+- APIs & system integration
+- Integration patterns
+- Resilience & reliability
 - Integration testing
-- Distributed systems
 
 ## Existing Work
 
@@ -53,7 +51,6 @@ Future work (not in this repo yet):
 - Retries
 - Bulkhead
 - Claim Check
-- Wire Tap
 
 ## Related
 

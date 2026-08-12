@@ -7,11 +7,11 @@
 /samples/rabbitmq-testcontainers/RabbitMQ.Sample/obj
 /samples/rabbitmq-testcontainers/RabbitMQ.Sample.Tests/bin
 /samples/rabbitmq-testcontainers/RabbitMQ.Sample.Tests/obj
-/samples/Shared.EmulatorSample/Shared.EmulatorSample/bin/Debug/net8.0
-/samples/Shared.EmulatorSample/Shared.EmulatorSample/obj
-/samples/storagequeue-emulator-testcontainers/StorageQueue.EmulatorSample/bin
+/testing/Shared.EmulatorSample/Shared.EmulatorSample/bin/Debug/net8.0
+/testing/Shared.EmulatorSample/Shared.EmulatorSample/obj
+/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample/bin
 /.vs/azure-solutions-architecture.slnx/FileContentIndex
 /.vs
-/samples/storagequeue-emulator-testcontainers/StorageQueue.EmulatorSample/obj
-/samples/storagequeue-emulator-testcontainers/StorageQueue.EmulatorSample.Tests/bin
-/samples/storagequeue-emulator-testcontainers/StorageQueue.EmulatorSample.Tests/obj
+/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample/obj
+/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample.Tests/bin
+/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample.Tests/obj

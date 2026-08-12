@@ -5,7 +5,7 @@ A clean example of testing Azure Functions with Storage Queue using Azurite emul
 ## Quick Start
 
 ### Prerequisites
-- .NET 8.0 SDK
+- .NET 10 SDK
 - Docker Desktop
 
 ### Run the Tests

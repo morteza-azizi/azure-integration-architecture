@@ -15,27 +15,27 @@ Engineering home for my Azure Integration Architecture work and article series â
 
 ## Existing Work
 
-Published samples under [`samples/`](./samples/).
+Published work under [`testing/`](./testing/).
 
 ### Azure Service Bus
 
 Local integration testing of Azure Functions with Service Bus Emulator and Testcontainers.
 
-- Sample: [`samples/servicebus-emulator-testcontainers/`](./samples/servicebus-emulator-testcontainers/)
+- Sample: [`testing/servicebus-testcontainers/`](./testing/servicebus-testcontainers/)
 - [Read the article](https://www.mortezaazizi.com/posts/azure-service-bus-testing-without-the-drama/)
 
 ### Azure Storage Queue
 
 Local integration testing of Azure Functions with Azurite and Testcontainers.
 
-- Sample: [`samples/storagequeue-emulator-testcontainers/`](./samples/storagequeue-emulator-testcontainers/)
+- Sample: [`testing/storagequeue-testcontainers/`](./testing/storagequeue-testcontainers/)
 - [Read the article](https://www.mortezaazizi.com/posts/azure-storage-queue-testing-journey/)
 
 ### Shared testing infrastructure
 
 Shared models and helpers used by the emulator samples:
 
-[`samples/Shared.EmulatorSample/`](./samples/Shared.EmulatorSample/)
+[`testing/Shared.EmulatorSample/`](./testing/Shared.EmulatorSample/)
 
 ## Approach
 

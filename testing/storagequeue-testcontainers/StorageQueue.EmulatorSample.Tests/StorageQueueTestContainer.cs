@@ -18,8 +18,7 @@ public class StorageQueueTestContainer : IAsyncDisposable
     
     public async Task StartAsync()
     {
-        _azuriteContainer = new AzuriteBuilder()
-            .WithImage("mcr.microsoft.com/azure-storage/azurite:3.33.0")
+        _azuriteContainer = new AzuriteBuilder("mcr.microsoft.com/azure-storage/azurite:3.36.0")
             .WithPortBinding(BlobPort, true)   // Blob service
             .WithPortBinding(QueuePort, true)  // Queue service
             .WithPortBinding(TablePort, true)  // Table service

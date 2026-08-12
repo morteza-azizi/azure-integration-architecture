@@ -19,8 +19,7 @@ public class ServiceBusTestContainer : IAsyncDisposable
     
     public async Task StartAsync()
     {
-        _serviceBusContainer = new ServiceBusBuilder()
-            .WithImage("mcr.microsoft.com/azure-messaging/servicebus-emulator:latest")
+        _serviceBusContainer = new ServiceBusBuilder("mcr.microsoft.com/azure-messaging/servicebus-emulator:latest")
             .WithAcceptLicenseAgreement(true)
             .WithPortBinding(ServiceBusPort, true)
             .WithPortBinding(ServiceBusHttpPort, true)  // HTTP port for health checks

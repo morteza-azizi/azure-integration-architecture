@@ -19,7 +19,7 @@ A clean example of testing Azure Functions with Service Bus using containerized 
 ## 🚀 How to Use It
 
 ### Prerequisites
-- .NET 8.0 SDK
+- .NET 10 SDK
 - Docker Desktop
 
 ### Run the Tests

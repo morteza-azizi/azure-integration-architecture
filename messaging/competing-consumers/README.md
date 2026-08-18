@@ -19,6 +19,8 @@ One Producer. One Consumer app. Run the consumer as many times as you want.
 
 ## Run
 
+Step-by-step: [RUNBOOK.md](./RUNBOOK.md)
+
 Needs .NET 10 and a Service Bus connection string (emulator or Azure).
 
 Set `ServiceBusConnection` in:
@@ -52,7 +54,9 @@ az group create -n rg-competing-consumers -l westeurope
 az deployment group create -g rg-competing-consumers -f infra/main.bicep
 ```
 
-Then put the namespace connection string in both `appsettings.json` files.
+Copy `serviceBusConnectionString` from the deployment output into both `appsettings.json` files.
+
+Downstream API (delay + concurrency cap): `dotnet run --project src/DownstreamApi`
 
 ## Article
 

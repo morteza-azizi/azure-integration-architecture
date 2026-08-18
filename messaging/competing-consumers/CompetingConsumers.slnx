@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="src/Producer/Producer.csproj" />
+  <Project Path="src/Consumer/Consumer.csproj" />
+  <Project Path="src/DownstreamApi/DownstreamApi.csproj" />
+  <Project Path="tests/CompetingConsumers.Tests/CompetingConsumers.Tests.csproj" />
+</Solution>

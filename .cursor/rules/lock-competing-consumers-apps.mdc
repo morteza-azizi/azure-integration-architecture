@@ -1,0 +1,17 @@
+---
+description: Competing Consumers Producer and Consumer Program.cs are locked
+globs: messaging/competing-consumers/src/**/Program.cs
+alwaysApply: false
+---
+
+# Locked: Competing Consumers apps
+
+These files are accepted and locked:
+
+- `messaging/competing-consumers/src/Consumer/Program.cs`
+- `messaging/competing-consumers/src/Producer/Program.cs`
+
+- Do not edit, reformat, refactor, or "improve" these files.
+- Keep the Producer `for` loop as-is.
+- Keep Consumer identity as `consumer-{pid}` and Ctrl+C shutdown as-is.
+- If a later task seems to require a change, stop and ask. Only edit after the user explicitly unlocks the file.

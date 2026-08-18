@@ -15,7 +15,7 @@ Engineering home for my Azure Integration Architecture work and article series �
 
 ## Existing Work
 
-Published work under [`testing/`](./testing/).
+Published work under [`testing/`](./testing/) and [`messaging/`](./messaging/).
 
 ### Azure Service Bus
 
@@ -37,6 +37,13 @@ Shared models and helpers used by the emulator samples:
 
 [`testing/Shared.EmulatorSample/`](./testing/Shared.EmulatorSample/)
 
+### Competing Consumers
+
+Multiple consumers on one Azure Service Bus queue.
+
+- Sample: [`messaging/competing-consumers/`](./messaging/competing-consumers/)
+- Article draft: [`messaging/competing-consumers/article.md`](./messaging/competing-consumers/article.md)
+
 ## Approach
 
 > Think → Decide → Build → Test → Break → Measure → Explain → Share
@@ -47,7 +54,6 @@ Focus is on working implementations, experiments, and the architectural trade-of
 
 Future work (not in this repo yet):
 
-- Competing Consumers
 - Idempotency
 - Inbox Pattern
 - Retries

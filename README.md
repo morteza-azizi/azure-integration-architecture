@@ -15,7 +15,7 @@ Engineering home for my Azure Integration Architecture work and article series â
 
 ## Existing Work
 
-Published work under [`testing/`](./testing/) and [`messaging/`](./messaging/).
+Published and experimental work under [`testing/`](./testing/) and [`messaging/`](./messaging/).
 
 ### Azure Service Bus
 
@@ -39,10 +39,10 @@ Shared models and helpers used by the emulator samples:
 
 ### Competing Consumers
 
-Multiple consumers on one Azure Service Bus queue.
+Multiple processes competing for work on one Azure Service Bus queue, plus a downstream API.
 
 - Sample: [`messaging/competing-consumers/`](./messaging/competing-consumers/)
-- Article draft: [`messaging/competing-consumers/article.md`](./messaging/competing-consumers/article.md)
+- [Read the article](https://www.mortezaazizi.com/posts/competing-consumers-how-many-do-we-actually-need/)
 
 ## Approach
 

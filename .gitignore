@@ -1,17 +1,4 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/samples/rabbitmq-testcontainers/RabbitMQ.Sample/obj/Debug/net8.0
-/samples/rabbitmq-testcontainers/RabbitMQ.Sample/obj/Release/net8.0
-/samples/rabbitmq-testcontainers/RabbitMQ.Sample/obj
-/samples/rabbitmq-testcontainers/RabbitMQ.Sample.Tests/bin
-/samples/rabbitmq-testcontainers/RabbitMQ.Sample.Tests/obj
-/testing/Shared.EmulatorSample/Shared.EmulatorSample/bin/Debug/net10.0
-/testing/Shared.EmulatorSample/Shared.EmulatorSample/obj
-/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample/bin
-/.vs/azure-solutions-architecture.slnx/FileContentIndex
-/.vs
-/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample/obj
-/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample.Tests/bin
-/testing/storagequeue-testcontainers/StorageQueue.EmulatorSample.Tests/obj
+﻿bin/
+obj/
+.vs/
+*.user
